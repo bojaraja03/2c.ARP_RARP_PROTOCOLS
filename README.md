@@ -17,9 +17,77 @@ stored.
 5. Map the IP address with its MAC address and return the MAC address to client.
 P
 ## PROGRAM - ARP
+```
+import socket
+
+s = socket.socket()
+s.bind(('localhost', 8000))
+s.listen(5)
+print("ARP Server is listening on port 8000...")
+c, addr = s.accept()
+
+address = {
+    "169.254.185.63": "FC:6D:77:6C:2B:4A",
+    "165.165.79.1": "8A:BC:E3:FA"
+}
+
+while True:
+    ip = c.recv(1024).decode()
+    print(f"Received IP: {ip}")
+    mac = address.get(ip, "Not Found")
+    c.send(mac.encode())
+```
+```
+import socket
+
+s = socket.socket()
+s.connect(('localhost', 8000))
+
+while True:
+    ip = input("Enter Logical Address (IP): ")
+    s.send(ip.encode())
+    print("MAC Address:", s.recv(1024).decode())
+```
 ## OUPUT - ARP
+<img width="1851" height="318" alt="image" src="https://github.com/user-attachments/assets/2d7a8984-78ae-403a-9e5e-7018f6575c08" />
+<img width="1848" height="307" alt="image" src="https://github.com/user-attachments/assets/4c76a4e0-4520-4ff3-93f2-add7f5704253" />
+
 ## PROGRAM - RARP
+```
+import socket
+
+s = socket.socket()
+s.bind(('localhost', 8001))
+s.listen(5)
+print("RARP Server is listening on port 8001...")
+c, addr = s.accept()
+
+address = {
+    "FC:6D:77:6C:2B:4A": "169.254.185.63",
+    "8A:BC:E3:FA": "165.165.79.1"
+}
+
+while True:
+    mac = c.recv(1024).decode()
+    print(f"Received MAC: {mac}")
+    ip = address.get(mac, "Not Found")
+    c.send(ip.encode())
+```
+```
+import socket
+
+s = socket.socket()
+s.connect(('localhost', 8001))
+
+while True:
+    mac = input("Enter Physical Address (MAC): ")
+    s.send(mac.encode())
+    print("IP Address:", s.recv(1024).decode())
+```
 ## OUPUT -RARP
+<img width="1850" height="301" alt="image" src="https://github.com/user-attachments/assets/c095cc34-3e97-4784-aca1-78126c218502" />
+<img width="1846" height="312" alt="image" src="https://github.com/user-attachments/assets/30ca56df-3b1c-414d-ba46-7cbfa2c7a4cc" />
+
 ## RESULT
 Thus, the python program for simulating ARP protocols using TCP was successfully 
 executed.
